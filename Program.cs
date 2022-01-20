@@ -1,8 +1,11 @@
 // Copyright © 2022 Thomas Valkenburg
 
+using IWshRuntimeLibrary;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Reflection;
+using File = System.IO.File;
 
 namespace Rainbow_Six_Siege_Analyst
 {
@@ -18,6 +21,7 @@ namespace Rainbow_Six_Siege_Analyst
         private async Task Run()
         {
             await ConfirmAndFixPaths();
+            await CreateShortcut();
 
             while (IsFileLocked(ConfigFilePath))
             {
@@ -58,23 +62,6 @@ namespace Rainbow_Six_Siege_Analyst
             });
         }
 
-        private static bool IsFileLocked(string filePath)
-        {
-            try
-            {
-                using var stream = new FileStream(filePath, FileMode.Open);
-                stream.Close();
-            }
-            catch (IOException)
-            {
-                // the file is unavailable because it is still being written to
-                return true;
-            }
-
-            //file is not locked
-            return false;
-        }
-
         private async Task ConfirmAndFixPaths()
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -104,6 +91,18 @@ namespace Rainbow_Six_Siege_Analyst
             });
         }
 
+        private static Task CreateShortcut()
+        {
+            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            var shell = new WshShell();
+            var shortcut = (IWshShortcut)shell.CreateShortcut(desktopPath + "\\" + "Rainbow Six Siege Analyst" + ".lnk");
+            shortcut.TargetPath = Environment.ProcessPath;
+            shortcut.Save();
+
+            return Task.CompletedTask;
+        }
+
         private string DisplayPopUp(int i)
         {
             var def = i == 0 ? "C:\\Program Files (x86)\\Overwolf\\Overwolf.exe" : "D:\\SteamLibrary\\steamapps\\common\\Tom Clancy's Rainbow Six Siege\\RainbowSix.exe";
@@ -112,6 +111,23 @@ namespace Rainbow_Six_Siege_Analyst
             var input = Interaction.InputBox($"Please type the installation folder for {path}", "Superior Rainbow Six Siege Analyst Launcher", def, 50, 50);
 
             return input;
+        }
+
+        private static bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using var stream = new FileStream(filePath, FileMode.Open);
+                stream.Close();
+            }
+            catch (IOException)
+            {
+                // the file is unavailable because it is still being written to
+                return true;
+            }
+
+            //file is not locked
+            return false;
         }
     }
 }
