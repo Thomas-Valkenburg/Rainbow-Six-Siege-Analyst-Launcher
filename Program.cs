@@ -1,3 +1,5 @@
+// Copyright © 2022 Thomas Valkenburg
+
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Diagnostics;
