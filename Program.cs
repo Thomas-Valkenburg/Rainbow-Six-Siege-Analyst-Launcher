@@ -41,7 +41,7 @@ namespace Rainbow_Six_Siege_Analyst
             }
             catch { /* Do nothing*/ }
 
-            await Task.Delay(120000);
+            await Task.Delay(60000);
 
             var processes = Process.GetProcesses().ToList();
 
