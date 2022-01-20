@@ -2,14 +2,20 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <RootNamespace>Rainbow_Six_Siege_Analyst</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>Rainbow_Six_Siege_Analyst.Program</StartupObject>
+    <ApplicationIcon>rainbow_six_siege_analyst_launcher_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+  <ItemGroup>
+    <Content Include="rainbow_six_siege_analyst_launcher_icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
