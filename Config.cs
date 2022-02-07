@@ -1,5 +1,3 @@
-﻿// Copyright © 2022 Thomas Valkenburg
-
 namespace Rainbow_Six_Siege_Analyst
 {
     public class Config
