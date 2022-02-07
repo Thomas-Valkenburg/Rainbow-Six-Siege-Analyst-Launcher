@@ -1,5 +1,3 @@
-// Copyright © 2022 Thomas Valkenburg
-
 using IWshRuntimeLibrary;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
