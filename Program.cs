@@ -2,14 +2,14 @@ using IWshRuntimeLibrary;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Reflection;
 using File = System.IO.File;
 
 namespace Rainbow_Six_Siege_Analyst
 {
     internal class Program
     {
-        private static readonly string ConfigFilePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Rainbow Six Siege Analyst Launcher\\config.json";
+        private static readonly string ConfigFilePath =
+            $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Rainbow Six Siege Analyst Launcher\config.json";
 
         /// <summary>
         ///  The main entry point for the application.
@@ -41,7 +41,10 @@ namespace Rainbow_Six_Siege_Analyst
             {
                 Process.Start(rainbowSixPath);
             }
-            catch { /* Do nothing*/ }
+            catch
+            {
+                /* Do nothing*/
+            }
 
             await Task.Delay(60000);
 
@@ -50,14 +53,11 @@ namespace Rainbow_Six_Siege_Analyst
             if (!processes.Exists(x => x.ProcessName == "RainbowSix")) return;
 
             var rainbowSixProcess = processes.Find(x => x.ProcessName == "RainbowSix")!;
-            var overwolfProcess = processes.Find(x => x.ProcessName == "Overwolf")!;
-            var ubisoftProcess = processes.Find(x => x.ProcessName == "upc")!;
-            var processesToStop = new List<Process> {overwolfProcess, ubisoftProcess};
+            var overwolfProcess   = processes.Find(x => x.ProcessName == "Overwolf")!;
+            var ubisoftProcess    = processes.Find(x => x.ProcessName == "upc")!;
+            var processesToStop   = new List<Process> {overwolfProcess, ubisoftProcess};
 
-            await rainbowSixProcess.WaitForExitAsync().ContinueWith(_ =>
-            {
-                processesToStop.ForEach(x => x.Kill());
-            });
+            await rainbowSixProcess.WaitForExitAsync().ContinueWith(_ => { processesToStop.ForEach(x => x.Kill()); });
         }
 
         private async Task ConfirmAndFixPaths()
@@ -81,7 +81,7 @@ namespace Rainbow_Six_Siege_Analyst
             await Task.Run(() =>
             {
                 config.OverwolfPath ??= DisplayPopUp(0);
-                config.SiegePath ??= DisplayPopUp(1);
+                config.SiegePath    ??= DisplayPopUp(1);
             }).ContinueWith(async _ =>
             {
                 await File.WriteAllTextAsync(ConfigFilePath, JsonConvert.SerializeObject(config));
@@ -94,19 +94,23 @@ namespace Rainbow_Six_Siege_Analyst
             var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             var shell = new WshShell();
-            var shortcut = (IWshShortcut)shell.CreateShortcut(desktopPath + "\\" + "Rainbow Six Siege Analyst" + ".lnk");
+            var shortcut =
+                (IWshShortcut) shell.CreateShortcut(desktopPath + "\\" + "Rainbow Six Siege Analyst" + ".lnk");
             shortcut.TargetPath = Environment.ProcessPath;
             shortcut.Save();
 
             return Task.CompletedTask;
         }
 
-        private string DisplayPopUp(int i)
+        private static string DisplayPopUp(int i)
         {
-            var def = i == 0 ? "C:\\Program Files (x86)\\Overwolf\\Overwolf.exe" : "D:\\SteamLibrary\\steamapps\\common\\Tom Clancy's Rainbow Six Siege\\RainbowSix.exe";
+            var def = i == 0
+                ? @"C:\Program Files (x86)\Overwolf\Overwolf.exe"
+                : @"D:\SteamLibrary\steamapps\common\Tom Clancy's Rainbow Six Siege\RainbowSix.exe";
             var path = i == 0 ? "Overwolf" : "Rainbow Six Siege";
 
-            var input = Interaction.InputBox($"Please type the installation folder for {path}", "Superior Rainbow Six Siege Analyst Launcher", def, 50, 50);
+            var input = Interaction.InputBox($"Please type the installation folder for {path}",
+                "Superior Rainbow Six Siege Analyst Launcher", def, 50, 50);
 
             return input;
         }
